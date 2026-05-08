@@ -1,0 +1,9 @@
+{
+  "name": "FleurMat — Fiches plantes",
+  "short_name": "FleurMat",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafaf7",
+  "theme_color": "#4a7c5a",
+  "icons": []
+}

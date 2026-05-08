@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4a7c5a">
+  <title>FleurMat — Fiches plantes</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+  <!-- Barre de recherche (toujours visible) -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="logo" aria-label="Accueil FleurMat">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <circle cx="14" cy="14" r="13" stroke="#4a7c5a" stroke-width="2"/>
+          <path d="M14 22 C14 22 7 17 7 11 A7 7 0 0 1 21 11 C21 17 14 22 14 22Z" stroke="#4a7c5a" stroke-width="2" fill="none"/>
+          <circle cx="14" cy="11" r="2" fill="#4a7c5a"/>
+        </svg>
+        <span>FleurMat</span>
+      </a>
+      <div class="search-wrap">
+        <label for="recherche" class="sr-only">Rechercher une plante</label>
+        <div class="search-field">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <circle cx="7.5" cy="7.5" r="5.5" stroke="#888" stroke-width="1.5"/>
+            <path d="M11.5 11.5L16 16" stroke="#888" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input type="search" id="recherche" placeholder="Rechercher une plante…" autocomplete="off" autocorrect="off" spellcheck="false">
+        </div>
+        <ul id="suggestions" class="suggestions" role="listbox" aria-label="Suggestions" hidden></ul>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- Écran d'accueil -->
+    <section id="ecran-accueil" class="accueil" hidden>
+      <div class="accueil-hero">
+        <svg class="accueil-icon" width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <circle cx="32" cy="32" r="30" stroke="#4a7c5a" stroke-width="2"/>
+          <path d="M32 50 C32 50 16 40 16 26 A16 16 0 0 1 48 26 C48 40 32 50 32 50Z" stroke="#4a7c5a" stroke-width="2" fill="none"/>
+          <circle cx="32" cy="26" r="4" fill="#4a7c5a"/>
+        </svg>
+        <h1>Bienvenue chez FleurMat</h1>
+        <p>Scannez le QR code devant votre plante ou recherchez-la ci-dessus.</p>
+      </div>
+      <div id="liste-plantes" class="liste-plantes"></div>
+    </section>
+
+    <!-- Fiche plante -->
+    <article id="fiche-plante" class="fiche" hidden>
+      <div class="fiche-photo-wrap">
+        <img id="fiche-photo" src="" alt="" loading="lazy" class="fiche-photo">
+        <span id="fiche-prix" class="prix-badge" hidden></span>
+      </div>
+
+      <div class="fiche-contenu">
+        <header class="fiche-header">
+          <h1 id="fiche-nom" class="fiche-nom"></h1>
+          <p id="fiche-botanique" class="fiche-botanique"></p>
+        </header>
+
+        <!-- Pictos infos clés -->
+        <div id="fiche-pictos" class="pictos-grille"></div>
+
+        <!-- Infos secondaires -->
+        <div class="infos-secondaires">
+          <button class="toggle-infos" aria-expanded="false" aria-controls="infos-detail">
+            Voir plus d'infos
+            <svg class="chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <dl id="infos-detail" class="infos-detail" hidden></dl>
+        </div>
+
+        <!-- Notes -->
+        <div id="fiche-notes-wrap" class="notes-bloc" hidden>
+          <h2 class="notes-titre">Notes de culture</h2>
+          <p id="fiche-notes"></p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Message erreur plante introuvable -->
+    <section id="ecran-erreur" class="erreur" hidden>
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <circle cx="24" cy="24" r="22" stroke="#888" stroke-width="2"/>
+        <path d="M24 14V26" stroke="#888" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="24" cy="33" r="1.5" fill="#888"/>
+      </svg>
+      <h1>Plante introuvable</h1>
+      <p id="erreur-slug"></p>
+      <a href="/" class="btn-retour">Voir toutes les plantes</a>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
