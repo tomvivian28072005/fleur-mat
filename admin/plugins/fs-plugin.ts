@@ -37,6 +37,25 @@ export function fsPlugin(): Plugin {
           return;
         }
 
+        // GET /api/detect — détecte automatiquement le repo et l'URL GitHub Pages
+        if (url === '/api/detect' && method === 'GET') {
+          const repoPrincipal = path.join(process.cwd(), '..');
+          let urlBase = '';
+          try {
+            const gitConfig = fs.readFileSync(path.join(repoPrincipal, '.git', 'config'), 'utf-8');
+            // Extraire l'URL remote origin (https ou ssh)
+            const httpsMatch = gitConfig.match(/url\s*=\s*https:\/\/github\.com\/([^/]+)\/([^\s.]+)/);
+            const sshMatch = gitConfig.match(/url\s*=\s*git@github\.com:([^/]+)\/([^\s.]+)/);
+            const m = httpsMatch ?? sshMatch;
+            if (m) {
+              const [, user, repo] = m;
+              urlBase = `https://${user}.github.io/${repo.replace(/\.git$/, '')}`;
+            }
+          } catch { /* pas de .git ou pas de remote */ }
+          json(res, 200, { repoPrincipal, urlBase });
+          return;
+        }
+
         // Lire le chemin du repo depuis le header ou localStorage (passé en header)
         const repoPath = (req.headers['x-repo-path'] as string | undefined) ?? '';
         if (!repoPath && url.startsWith('/api/')) {
