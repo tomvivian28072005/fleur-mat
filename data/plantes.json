@@ -1,24 +1,5 @@
 [
   {
-    "slug": "tomate-cerise-sweet-100",
-    "nomCommun": "Tomate cerise",
-    "nomBotanique": "Solanum lycopersicum",
-    "variete": "Sweet 100",
-    "image": "tomate-cerise-sweet-100.jpg",
-    "prix": 3.5,
-    "type": "Annuelle potagère",
-    "exposition": "plein-soleil",
-    "arrosage": "regulier",
-    "hauteurAdulte": "1,50 m",
-    "largeurAdulte": "60 cm",
-    "periodePlantation": "Avril - Mai",
-    "periodeRecolteOuFloraison": "Juillet - Octobre",
-    "typeSol": "Riche, bien drainé",
-    "rusticite": "Non rustique (gélif)",
-    "comestible": true,
-    "notes": "Tuteurer dès la plantation. Pincer les gourmands pour favoriser la fructification."
-  },
-  {
     "slug": "geranium-lierre",
     "nomCommun": "Géranium lierre",
     "nomBotanique": "Pelargonium peltatum",
@@ -35,7 +16,8 @@
     "typeSol": "Terreau universel bien drainé",
     "rusticite": "Non rustique (gélif)",
     "comestible": false,
-    "notes": "Idéal pour les jardinières suspendues et les balcons. Rentrer à l'abri avant les gelées."
+    "notes": "Idéal pour les jardinières suspendues et les balcons. Rentrer à l'abri avant les gelées.",
+    "visible": true
   },
   {
     "slug": "rosier-pierre-de-ronsard",
@@ -90,6 +72,7 @@
     "periodeRecolteOuFloraison": "s",
     "typeSol": "s",
     "rusticite": "s",
-    "comestible": true
+    "comestible": true,
+    "visible": false
   }
 ]
