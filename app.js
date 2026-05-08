@@ -33,43 +33,23 @@
   const listePlantesEl = $('liste-plantes');
 
   // ---- Chargement des données ----
+  // Toujours fetcher en frais (cache-busting) ; localStorage = fallback hors-ligne uniquement
   async function chargerPlantes() {
     try {
-      // Vérifier le cache localStorage
-      const hash = await fetchHash();
-      const cachedHash = localStorage.getItem(CACHE_HASH_KEY);
-      const cached = localStorage.getItem(CACHE_KEY);
-
-      if (cached && hash && hash === cachedHash) {
-        return JSON.parse(cached);
-      }
-
-      const res = await fetch('data/plantes.json');
+      const res = await fetch(`data/plantes.json?_=${Date.now()}`, { cache: 'no-store' });
       if (!res.ok) throw new Error('Impossible de charger les données');
       const data = await res.json();
-
-      // Mettre en cache
-      try {
-        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-        if (hash) localStorage.setItem(CACHE_HASH_KEY, hash);
-      } catch (_) { /* quota dépassé, on continue sans cache */ }
-
-      return data;
+      // Sauvegarder pour le hors-ligne
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch (_) {}
+      // Ne retourner que les plantes visibles (visible !== false)
+      return data.filter(p => p.visible !== false);
     } catch (e) {
-      // Fallback sur le cache si disponible
+      // Hors-ligne : utiliser le cache local
       const cached = localStorage.getItem(CACHE_KEY);
-      if (cached) return JSON.parse(cached);
+      if (cached) return JSON.parse(cached).filter(p => p.visible !== false);
       console.error('Erreur chargement plantes :', e);
       return [];
     }
-  }
-
-  async function fetchHash() {
-    try {
-      // Hash simple basé sur la taille du fichier via HEAD
-      const res = await fetch('data/plantes.json', { method: 'HEAD' });
-      return res.headers.get('etag') || res.headers.get('last-modified') || null;
-    } catch (_) { return null; }
   }
 
   // ---- Routage ----

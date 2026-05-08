@@ -19,4 +19,5 @@ export interface Plante {
   rusticite?: string;
   comestible?: boolean;
   notes?: string;
+  visible?: boolean;
 }

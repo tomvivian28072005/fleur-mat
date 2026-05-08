@@ -1,11 +1,30 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listerPlantes, supprimerPlante } from '../lib/api';
+import { listerPlantes, supprimerPlante, sauvegarderPlantes } from '../lib/api';
 import type { Plante } from '../lib/types';
 import ModalConfirm from '../components/ModalConfirm';
 
 type Colonne = 'nomCommun' | 'type' | 'prix';
 type Tri = { col: Colonne; asc: boolean };
+
+function IconOeilOuvert() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5Z"/>
+      <circle cx="8" cy="8" r="2"/>
+    </svg>
+  );
+}
+
+function IconOeilFerme() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5Z"/>
+      <circle cx="8" cy="8" r="2"/>
+      <line x1="2" y1="2" x2="14" y2="14"/>
+    </svg>
+  );
+}
 
 export default function ListePlantes() {
   const navigate = useNavigate();
@@ -67,6 +86,19 @@ export default function ListePlantes() {
     else setSelection(new Set(plantesFiltrees.map(p => p.slug)));
   }
 
+  async function toggleVisibilite(slug: string) {
+    const nouvelles = plantes.map(p =>
+      p.slug === slug ? { ...p, visible: p.visible === false ? true : false } : p
+    );
+    setPlantes(nouvelles);
+    try {
+      await sauvegarderPlantes(nouvelles);
+    } catch (e) {
+      alert(`Erreur : ${e}`);
+      charger();
+    }
+  }
+
   async function confirmerSuppression() {
     if (!aSupprimer) return;
     try {
@@ -87,6 +119,8 @@ export default function ListePlantes() {
 
   const fleche = (col: Colonne) => tri.col === col ? (tri.asc ? ' ↑' : ' ↓') : '';
 
+  const nbCachees = plantes.filter(p => p.visible === false).length;
+
   if (chargement) return <div className="text-center py-20 text-gray-400">Chargement…</div>;
   if (erreur) return (
     <div className="text-center py-20">
@@ -98,7 +132,10 @@ export default function ListePlantes() {
   return (
     <div>
       <div className="flex flex-wrap items-center gap-3 mb-5">
-        <h1 className="text-xl font-bold flex-1">Catalogue ({plantes.length})</h1>
+        <h1 className="text-xl font-bold flex-1">
+          Catalogue ({plantes.length})
+          {nbCachees > 0 && <span className="ml-2 text-sm font-normal text-gray-400">{nbCachees} masquée{nbCachees > 1 ? 's' : ''}</span>}
+        </h1>
         {selection.size > 0 && (
           <button onClick={imprimerSelection} className="btn-secondaire flex items-center gap-2">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="5" width="12" height="8" rx="1"/><path d="M4 5V3h8v2"/><circle cx="12" cy="8.5" r=".75" fill="currentColor"/></svg>
@@ -141,44 +178,56 @@ export default function ListePlantes() {
                 <th className="px-3 py-3 text-right cursor-pointer select-none hover:text-vert hidden md:table-cell" onClick={() => toggleTri('prix')}>
                   Prix{fleche('prix')}
                 </th>
+                <th className="px-3 py-3 text-center w-10" title="Visible par les clients">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#888" strokeWidth="1.5" className="mx-auto"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5Z"/><circle cx="8" cy="8" r="2"/></svg>
+                </th>
                 <th className="px-3 py-3 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {plantesFiltrees.map(p => (
-                <tr key={p.slug} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-3 py-2 text-center">
-                    <input type="checkbox" checked={selection.has(p.slug)} onChange={() => toggleSelection(p.slug)} className="rounded"/>
-                  </td>
-                  <td className="px-3 py-2">
-                    {p.image
-                      ? <img src={`../images/${p.image}`} alt="" className="w-12 h-10 object-cover rounded" onError={e => (e.currentTarget.style.display = 'none')}/>
-                      : <div className="w-12 h-10 bg-green-50 rounded flex items-center justify-center text-gray-300 text-xs">—</div>
-                    }
-                  </td>
-                  <td className="px-3 py-2">
-                    <div className="font-medium">{p.nomCommun}</div>
-                    {p.variete && <div className="text-gray-400 text-xs">{p.variete}</div>}
-                  </td>
-                  <td className="px-3 py-2 text-gray-500 hidden sm:table-cell">{p.type ?? '—'}</td>
-                  <td className="px-3 py-2 text-right hidden md:table-cell">
-                    {p.prix != null ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(p.prix) : '—'}
-                  </td>
-                  <td className="px-3 py-2">
-                    <div className="flex items-center justify-end gap-2">
-                      <button onClick={() => navigate(`/plante/${p.slug}`)} className="text-gray-400 hover:text-vert p-1 rounded" title="Éditer">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M10.5 2.5l3 3L5 14H2v-3L10.5 2.5Z"/></svg>
+              {plantesFiltrees.map(p => {
+                const visible = p.visible !== false;
+                return (
+                  <tr key={p.slug} className={`hover:bg-gray-50 transition-colors ${!visible ? 'opacity-50' : ''}`}>
+                    <td className="px-3 py-2 text-center">
+                      <input type="checkbox" checked={selection.has(p.slug)} onChange={() => toggleSelection(p.slug)} className="rounded"/>
+                    </td>
+                    <td className="px-3 py-2">
+                      <img src={`../images/${p.image}`} alt="" className="w-12 h-10 object-cover rounded" onError={e => (e.currentTarget.style.display = 'none')}/>
+                    </td>
+                    <td className="px-3 py-2">
+                      <div className="font-medium">{p.nomCommun}</div>
+                      {p.variete && <div className="text-gray-400 text-xs">{p.variete}</div>}
+                    </td>
+                    <td className="px-3 py-2 text-gray-500 hidden sm:table-cell">{p.type ?? '—'}</td>
+                    <td className="px-3 py-2 text-right hidden md:table-cell">
+                      {p.prix != null ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(p.prix) : '—'}
+                    </td>
+                    <td className="px-3 py-2 text-center">
+                      <button
+                        onClick={() => toggleVisibilite(p.slug)}
+                        className={`p-1 rounded transition-colors ${visible ? 'text-vert hover:text-vert-fonce' : 'text-gray-300 hover:text-gray-500'}`}
+                        title={visible ? 'Visible — cliquer pour masquer' : 'Masqué — cliquer pour afficher'}
+                      >
+                        {visible ? <IconOeilOuvert /> : <IconOeilFerme />}
                       </button>
-                      <button onClick={() => navigate(`/imprimer?slugs=${p.slug}`)} className="text-gray-400 hover:text-vert p-1 rounded" title="Imprimer QR">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="5" width="12" height="8" rx="1"/><path d="M4 5V3h8v2"/><circle cx="12" cy="8.5" r=".75" fill="currentColor"/></svg>
-                      </button>
-                      <button onClick={() => setASupprimer(p.slug)} className="text-gray-400 hover:text-red-500 p-1 rounded" title="Supprimer">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4l1 9h8l1-9"/></svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="px-3 py-2">
+                      <div className="flex items-center justify-end gap-2">
+                        <button onClick={() => navigate(`/plante/${p.slug}`)} className="text-gray-400 hover:text-vert p-1 rounded" title="Éditer">
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M10.5 2.5l3 3L5 14H2v-3L10.5 2.5Z"/></svg>
+                        </button>
+                        <button onClick={() => navigate(`/imprimer?slugs=${p.slug}`)} className="text-gray-400 hover:text-vert p-1 rounded" title="Imprimer QR">
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="5" width="12" height="8" rx="1"/><path d="M4 5V3h8v2"/><circle cx="12" cy="8.5" r=".75" fill="currentColor"/></svg>
+                        </button>
+                        <button onClick={() => setASupprimer(p.slug)} className="text-gray-400 hover:text-red-500 p-1 rounded" title="Supprimer définitivement">
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4l1 9h8l1-9"/></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
