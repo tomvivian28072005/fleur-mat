@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+  <rect width="1200" height="900" fill="#e8f2eb"/>
+  <!-- Tige -->
+  <line x1="600" y1="760" x2="600" y2="420" stroke="#4a7c5a" stroke-width="18" stroke-linecap="round"/>
+  <!-- Feuille gauche basse -->
+  <ellipse cx="490" cy="620" rx="110" ry="52" fill="#4a7c5a" opacity="0.7" transform="rotate(-35 490 620)"/>
+  <!-- Feuille droite basse -->
+  <ellipse cx="710" cy="580" rx="110" ry="52" fill="#4a7c5a" opacity="0.7" transform="rotate(35 710 580)"/>
+  <!-- Feuille gauche haute -->
+  <ellipse cx="510" cy="490" rx="90" ry="42" fill="#4a7c5a" opacity="0.85" transform="rotate(-30 510 490)"/>
+  <!-- Feuille droite haute -->
+  <ellipse cx="690" cy="460" rx="90" ry="42" fill="#4a7c5a" opacity="0.85" transform="rotate(30 690 460)"/>
+  <!-- Fleur centrale -->
+  <circle cx="600" cy="390" r="72" fill="#4a7c5a"/>
+  <circle cx="600" cy="310" r="44" fill="#4a7c5a" opacity="0.6"/>
+  <circle cx="672" cy="350" r="44" fill="#4a7c5a" opacity="0.6"/>
+  <circle cx="648" cy="436" r="44" fill="#4a7c5a" opacity="0.6"/>
+  <circle cx="552" cy="436" r="44" fill="#4a7c5a" opacity="0.6"/>
+  <circle cx="528" cy="350" r="44" fill="#4a7c5a" opacity="0.6"/>
+  <circle cx="600" cy="390" r="36" fill="#fafaf7"/>
+  <circle cx="600" cy="390" r="22" fill="#4a7c5a"/>
+  <!-- Pot -->
+  <path d="M510 760 L690 760 L660 860 L540 860 Z" fill="#c8a882"/>
+  <rect x="490" y="745" width="220" height="22" rx="8" fill="#b8956a"/>
+  <!-- Texte -->
+  <text x="600" y="916" font-family="Arial, sans-serif" font-size="38" fill="#4a7c5a" text-anchor="middle" opacity="0.5">Aucune photo</text>
+</svg>

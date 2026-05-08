@@ -16,8 +16,10 @@ const ARROSAGES: { val: Arrosage; label: string }[] = [
   { val: 'abondant', label: '🌊 Abondant' },
 ];
 
+const IMAGE_DEFAUT = 'placeholder.svg';
+
 const VIDE: Omit<Plante, 'slug' | 'image'> & { slug: string; image: string } = {
-  slug: '', nomCommun: '', nomBotanique: '', variete: '', image: '',
+  slug: '', nomCommun: '', nomBotanique: '', variete: '', image: IMAGE_DEFAUT,
   prix: undefined, type: '', exposition: undefined, arrosage: undefined,
   hauteurAdulte: '', largeurAdulte: '', periodePlantation: '',
   periodeRecolteOuFloraison: '', typeSol: '', rusticite: '',
@@ -31,7 +33,7 @@ export default function EditerPlante() {
 
   const [form, setForm] = useState<Plante>({ ...VIDE } as Plante);
   const [slugManuel, setSlugManuel] = useState(false);
-  const [imagePreview, setImagePreview] = useState('');
+  const [imagePreview, setImagePreview] = useState('../images/placeholder.svg');
   const [imageNouveauFichier, setImageNouveauFichier] = useState<{ base64: string; nom: string } | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [sauvegarde, setSauvegarde] = useState(false);
@@ -79,7 +81,7 @@ export default function EditerPlante() {
 
   async function enregistrer() {
     if (!form.nomCommun.trim()) { setErreur('Le nom commun est obligatoire.'); return; }
-    if (!form.image) { setErreur('Une image est obligatoire.'); return; }
+    if (!form.image) form.image = IMAGE_DEFAUT;
     if (!form.slug) { setErreur('Le slug est obligatoire.'); return; }
     setErreur('');
     setSauvegarde(true);
@@ -163,7 +165,7 @@ export default function EditerPlante() {
 
         {/* Image */}
         <section className="bg-white rounded-xl border border-gray-200 p-5">
-          <h2 className="font-semibold text-gray-700 text-sm uppercase tracking-wide mb-4">Photo <span className="text-red-500">*</span></h2>
+          <h2 className="font-semibold text-gray-700 text-sm uppercase tracking-wide mb-4">Photo</h2>
           <div
             className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${dragOver ? 'border-vert bg-green-50' : 'border-gray-200 hover:border-vert'}`}
             onDragOver={e => { e.preventDefault(); setDragOver(true); }}
@@ -182,8 +184,8 @@ export default function EditerPlante() {
             )}
           </div>
           <input ref={inputFichierRef} type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) traiterImage(f); }}/>
-          {imagePreview && (
-            <button className="text-xs text-gray-400 hover:text-red-500 mt-2" onClick={() => { setImagePreview(''); setImageNouveauFichier(null); setForm(f => ({ ...f, image: '' })); }}>
+          {form.image !== IMAGE_DEFAUT && (
+            <button className="text-xs text-gray-400 hover:text-red-500 mt-2" onClick={() => { setImagePreview('../images/placeholder.svg'); setImageNouveauFichier(null); setForm(f => ({ ...f, image: IMAGE_DEFAUT })); }}>
               Supprimer l'image
             </button>
           )}
