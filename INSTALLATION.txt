@@ -1,0 +1,67 @@
+=====================================
+  FLEURMAT — INSTALLATION SUR UN PC
+=====================================
+
+PRÉREQUIS
+---------
+- Node.js 20 ou supérieur : https://nodejs.org
+- Git : https://git-scm.com
+
+
+ÉTAPES D'INSTALLATION
+----------------------
+
+1. Cloner le projet
+   Ouvrir un terminal (PowerShell ou cmd) et taper :
+
+       git clone https://github.com/tomvivian28072005/fleur-mat.git
+
+   Le dossier "fleur-mat" sera créé dans le répertoire courant.
+
+2. Installer les dépendances
+   Dans le terminal, entrer dans le dossier admin :
+
+       cd fleur-mat\admin
+       npm install
+
+   Attendre la fin du téléchargement (peut prendre 1-2 minutes).
+
+3. Créer le raccourci de lancement
+   - Aller dans le dossier "fleur-mat"
+   - Faire un clic droit sur "Lancer Admin.bat"
+   - Choisir "Envoyer vers > Bureau (créer un raccourci)"
+   - (Optionnel) renommer le raccourci "FleurMat Admin"
+
+4. Premier lancement
+   - Double-cliquer sur le raccourci "FleurMat Admin" sur le bureau
+   - L'admin s'ouvre automatiquement sur http://localhost:5173
+   - Une fenêtre de configuration apparaît
+   - Cliquer sur "Détecter" — les champs se remplissent automatiquement
+   - Cliquer "Enregistrer"
+
+   C'est prêt !
+
+
+WORKFLOW QUOTIDIEN
+------------------
+1. Double-cliquer sur "FleurMat Admin" (bureau)
+2. Ajouter / modifier / supprimer des plantes
+3. Après vos modifications, ouvrir un terminal dans le dossier fleur-mat :
+
+       git add data/plantes.json images/
+       git commit -m "Mise à jour catalogue"
+       git push
+
+4. Le site public est mis à jour en 1-2 minutes.
+
+
+DÉPANNAGE
+---------
+- "npm n'est pas reconnu" → Node.js n'est pas installé, voir Prérequis
+- "git n'est pas reconnu" → Git n'est pas installé, voir Prérequis
+- La fenêtre se ferme immédiatement → lancer depuis un terminal pour voir l'erreur :
+      cd chemin\vers\fleur-mat\admin
+      npm run dev
+- Le site ne se met pas à jour → attendre 2 minutes après le push,
+  puis recharger la page (F5) depuis un téléphone ou un autre navigateur
+
