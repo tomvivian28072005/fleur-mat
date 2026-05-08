@@ -2,6 +2,8 @@
   FLEURMAT — INSTALLATION SUR UN PC
 =====================================
 
+Fonctionne sur Windows et Mac.
+
 PRÉREQUIS
 ---------
 - Node.js 20 ou supérieur : https://nodejs.org
@@ -12,31 +14,41 @@ PRÉREQUIS
 ----------------------
 
 1. Cloner le projet
-   Ouvrir un terminal (PowerShell ou cmd) et taper :
+   Ouvrir un terminal et taper :
 
        git clone https://github.com/tomvivian28072005/fleur-mat.git
 
    Le dossier "fleur-mat" sera créé dans le répertoire courant.
 
 2. Installer les dépendances
-   Dans le terminal, entrer dans le dossier admin :
 
+   Windows :
        cd fleur-mat\admin
        npm install
 
-   Attendre la fin du téléchargement (peut prendre 1-2 minutes).
+   Mac :
+       cd fleur-mat/admin
+       npm install
+
+   Attendre la fin du téléchargement (1-2 minutes).
 
 3. Créer le raccourci de lancement
-   - Aller dans le dossier "fleur-mat"
-   - Faire un clic droit sur "Lancer Admin.bat"
-   - Choisir "Envoyer vers > Bureau (créer un raccourci)"
-   - (Optionnel) renommer le raccourci "FleurMat Admin"
+
+   Windows :
+       - Aller dans le dossier "fleur-mat"
+       - Clic droit sur "Lancer Admin.bat" → "Envoyer vers > Bureau (créer un raccourci)"
+
+   Mac :
+       - Ouvrir le Terminal
+       - Rendre le fichier exécutable (une seule fois) :
+             chmod +x /chemin/vers/fleur-mat/Lancer\ Admin.command
+       - Glisser "Lancer Admin.command" dans le Dock ou sur le Bureau
 
 4. Premier lancement
-   - Double-cliquer sur le raccourci "FleurMat Admin" sur le bureau
-   - L'admin s'ouvre automatiquement sur http://localhost:5173
+   - Double-cliquer sur le fichier de lancement
+   - L'admin s'ouvre sur http://localhost:5173
    - Une fenêtre de configuration apparaît
-   - Cliquer sur "Détecter" — les champs se remplissent automatiquement
+   - Cliquer "Détecter" — les champs se remplissent automatiquement
    - Cliquer "Enregistrer"
 
    C'est prêt !
@@ -44,9 +56,9 @@ PRÉREQUIS
 
 WORKFLOW QUOTIDIEN
 ------------------
-1. Double-cliquer sur "FleurMat Admin" (bureau)
+1. Lancer l'admin (double-clic sur le raccourci)
 2. Ajouter / modifier / supprimer des plantes
-3. Après vos modifications, ouvrir un terminal dans le dossier fleur-mat :
+3. Ouvrir un terminal dans le dossier fleur-mat et pousser les changements :
 
        git add data/plantes.json images/
        git commit -m "Mise à jour catalogue"
@@ -57,11 +69,16 @@ WORKFLOW QUOTIDIEN
 
 DÉPANNAGE
 ---------
-- "npm n'est pas reconnu" → Node.js n'est pas installé, voir Prérequis
-- "git n'est pas reconnu" → Git n'est pas installé, voir Prérequis
+- "npm n'est pas reconnu" → Node.js n'est pas installé (voir Prérequis)
+- "git n'est pas reconnu" → Git n'est pas installé (voir Prérequis)
+- Mac : "permission denied" sur le .command → relancer le chmod +x (étape 3)
 - La fenêtre se ferme immédiatement → lancer depuis un terminal pour voir l'erreur :
-      cd chemin\vers\fleur-mat\admin
-      npm run dev
-- Le site ne se met pas à jour → attendre 2 minutes après le push,
-  puis recharger la page (F5) depuis un téléphone ou un autre navigateur
+
+   Windows :
+       cd chemin\vers\fleur-mat\admin && npm run dev
+
+   Mac :
+       cd chemin/vers/fleur-mat/admin && npm run dev
+
+- Le site ne se met pas à jour → attendre 2 min après le push, puis F5
 
